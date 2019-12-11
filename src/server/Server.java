@@ -46,6 +46,38 @@ public class Server {
         }
     }
 
+    public void sendPrivateMessage(String msg, ClientHandler sender){
+        String[] privateMessage = msg.split(" ", 3);
+        boolean privateMsgDeliveryStatus = false;
+
+        try{
+
+            for (ClientHandler c:clients ) {
+
+                if (sender.getNick().equalsIgnoreCase(privateMessage[1])){
+                    sender.sendMsg("Зачем Вы пишете сами себе?");
+                    privateMsgDeliveryStatus=true;
+                    break; // попытка отправить сообщение самому себе
+                }
+
+                if(c.getNick().equalsIgnoreCase(privateMessage[1])){
+                    c.sendMsg("Личное сообщение от " + sender.getNick() + ": " + privateMessage[2]);
+                    sender.sendMsg(sender.getNick()+" для "+ c.getNick() +": " + privateMessage[2]);
+                    privateMsgDeliveryStatus = true;
+                }
+            }
+
+        }catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
+
+        if (!privateMsgDeliveryStatus){
+            sender.sendMsg("Адресат не в сети.");
+        }
+    }
+
+
+
     public void subscribe(ClientHandler clientHandler){
         clients.add(clientHandler);
     }

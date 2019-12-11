@@ -55,8 +55,14 @@ public class ClientHandler {
                             sendMsg("/end");
                             break;
                         }
-//                        System.out.println(str);
-                        server.broadcastMsg(nick + " : " + str);
+
+                        if (str.substring(0,2).equalsIgnoreCase("/w")){  // private message
+                            server.sendPrivateMessage(str,this);
+                        }else {
+                            System.out.println(str);
+                            server.broadcastMsg(nick + " : " + str);
+                        }
+//
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -74,6 +80,10 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getNick() {
+        return nick;
     }
 
     public void sendMsg(String msg) {
